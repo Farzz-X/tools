@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ris Downloader</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            🌐 <span>Ris Downloader</span>
+        </div>
+        <nav>
+            <button onclick="showTool('tiktok')">TikTok Search</button>
+            <button onclick="showTool('spotify')">Spotify Search</button>
+        </nav>
+    </header>
+    <main>
+        <!-- TikTok Search -->
+        <section id="tiktok" class="tool-section">
+            <h2>TikTok Search</h2>
+            <div class="search-box">
+                <input type="text" id="tiktokQuery" placeholder="Masukkan kata kunci...">
+                <button onclick="searchTikTok()">Cari</button>
+            </div>
+            <div id="tiktokResult" class="result-box">
+                <!-- Hasil pencarian TikTok akan ditampilkan di sini -->
+            </div>
+        </section>
+
+        <!-- Spotify Search -->
+        <section id="spotify" class="tool-section hidden">
+            <h2>Spotify Search</h2>
+            <div class="search-box">
+                <input type="text" id="spotifyQuery" placeholder="Masukkan kata kunci...">
+                <button onclick="searchSpotify()">Cari</button>
+            </div>
+            <div id="spotifyResult" class="result-box">
+                <!-- Hasil pencarian Spotify akan ditampilkan di sini -->
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about">
+            <h2>Tentang Website</h2>
+            <p>Dibuat oleh Faris, website ini memudahkanmu mencari dan mengunduh video TikTok serta lagu Spotify. Ringan, responsif, dan mudah digunakan!</p>
+            <p>Semoga bermanfaat! 😊</p>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Faris Tools | Powered by siputzx & faris-apii</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
