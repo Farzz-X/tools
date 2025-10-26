@@ -57,6 +57,26 @@ async function searchTikTok() {
   }
 }
 
+async function getSpotifyDownloadUrl(trackUrl) {
+  try {
+    const downloadApiUrl = `https://api.siputzx.my.id/api/d/spotifyv2?url=${encodeURIComponent(trackUrl)}`;
+    const res = await fetch(downloadApiUrl);
+    const downloadData = await res.json();
+
+    console.log("Respons API:", downloadData); // Tambahkan ini
+
+    if (downloadData && downloadData.data && downloadData.data.mp3DownloadLink) {
+      return downloadData.data.mp3DownloadLink;
+    } else {
+      console.error("Gagal mendapatkan URL download:", downloadData);
+      return null;
+    }
+  } catch (error) {
+    console.error("Terjadi kesalahan saat mengunduh:", error);
+    return null;
+  }
+}
+
 async function searchSpotify() {
   const query = document.getElementById("spotifyQuery").value.trim();
   const resultBox = document.getElementById("spotifyResult");
@@ -82,22 +102,42 @@ async function searchSpotify() {
     resultBox.innerHTML = `
       <h3>🎶 Hasil Spotify:</h3>
       <div class="results">
-        ${data.data.map(song => `
-          <div class="card">
-            <img src="${song.thumbnail}" alt="${song.title}" width="100%">
-            <p><b>${song.title}</b> - ${song.artist || "Unknown"}</p>
-            <audio controls src="${song.preview_url}"></audio>
-            <div class="links">
-              <a href="${song.preview_url}" download="${song.title} - ${song.artist || 'Unknown'}.mp3">⬇️ Download</a>
+        ${data.data.map(song => {
+          return `
+            <div class="card">
+              <img src="${song.thumbnail}" alt="${song.title}" width="100%">
+              <p><b>${song.title}</b> - ${song.artist || "Unknown"}</p>
+              <div class="links">
+                <a href="#" onclick="downloadSpotify(event, '${song.track_url}', '${song.title}', '${song.artist}')">⬇️ Download</a>
+              </div>
             </div>
-          </div>
-        `).join('')}
+          `;
+        }).join('')}
       </div>
-  
     `;
+
   } catch (error) {
     console.error(error);
     resultBox.innerHTML = "⚠️ Gagal mengambil data dari API Spotify.";
+  }
+}
+
+async function downloadSpotify(event, trackUrl, title, artist) {
+  event.preventDefault(); // Mencegah navigasi ke URL
+
+  const downloadUrl = await getSpotifyDownloadUrl(trackUrl);
+
+  if (downloadUrl) {
+    // Buat link download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = `${title} - ${artist || 'Unknown'}.mp3`;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } else {
+    alert("Tidak dapat mengunduh lagu ini.");
   }
 }
 
