@@ -33,17 +33,24 @@ async function searchTikTok() {
       <div class="results">
         ${videos.map(v => `
           <div class="card">
-            <video src="${v.no_watermark}" controls width="100%" poster="${v.cover}"></video>
+            <video src="${v.no_watermark}" controls width="100%" poster="${v.cover}" autoplay muted></video>
             <p><b>${v.title || "Tanpa Judul"}</b></p>
             <audio controls src="${v.music}"></audio>
-            <div class="links">
-              <a href="${v.no_watermark}" target="_blank">⬇️ Download No Watermark</a>
-              <a href="${v.watermark}" target="_blank">⬇️ Download Watermark</a>
-            </div>
           </div>
         `).join('')}
       </div>
     `;
+
+    // Setelah menambahkan hasil pencarian ke resultBox
+    const videoElements = resultBox.querySelectorAll('video'); // Ganti nama variabel menjadi videoElements
+    videoElements.forEach(video => {
+      // Gunakan setTimeout untuk menunggu video termuat sebelum mencoba download
+      setTimeout(() => {
+        const videoUrl = video.getAttribute('src');
+        downloadResource(videoUrl, 'video.mp4');
+      }, 2000); // Tunggu 2 detik (sesuaikan jika perlu)
+    });
+
   } catch (error) {
     console.error(error);
     resultBox.innerHTML = "⚠️ Gagal mengambil data dari API TikTok.";
@@ -77,16 +84,32 @@ async function searchSpotify() {
       <div class="results">
         ${data.data.map(song => `
           <div class="card">
+            <img src="${song.thumbnail}" alt="${song.title}" width="100%">
             <p><b>${song.title}</b> - ${song.artist || "Unknown"}</p>
-            <a href="${song.track_url}" target="_blank">⬇️ Download</a>
+            <audio controls src="${song.preview_url}"></audio>
+            <div class="links">
+              <a href="${song.preview_url}" download="${song.title} - ${song.artist || 'Unknown'}.mp3">⬇️ Download</a>
+            </div>
           </div>
         `).join('')}
       </div>
+  
     `;
   } catch (error) {
     console.error(error);
     resultBox.innerHTML = "⚠️ Gagal mengambil data dari API Spotify.";
   }
+}
+
+// Fungsi untuk memicu download
+function downloadResource(url, filename) {
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 // Default tampil TikTok
